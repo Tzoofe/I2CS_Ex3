@@ -60,11 +60,32 @@ public class Ex3Algo implements PacManAlgo{
 			System.out.println(i+") status: "+g.getStatus()+",  type: "+g.getType()+",  pos: "+g.getPos(0)+",  time: "+g.remainTimeAsEatable(0));
 		}
 	}
+
+    //Needed fucntions essenially -
+    //findClosestFood - find the closest "3" value and run a bfs shortestPath function to it
+    //detDirection - Basically checks if the closest target and if needs to "warp" thru walls
+
+
+    /**
+     * TODO
+     * Write the FindClosestFood Function - itterate over the whole map and runa  dist function to the closest
+     * 3 value to current position in which we pass as a paramater well later call in the randomdir function.
+     *
+     * Write the deteremineDirection function to konw when to wrp around the map with cyclic things and when to move left or right
+     * @return
+     */
+
+
 	private static int randomDir() {
-		int[] dirs = {Game.UP, Game.LEFT, Game.DOWN, Game.RIGHT};
-		int ind = (int)(Math.random()*dirs.length);
-		return dirs[ind];
+        return 0;
 	}
+
+    private static Pixel2D findClosestFood(Map map, Pixel2D current, Map2D dist) {
+
+        return current;
+    }
+
+
     private static Pixel2D convertString(String st) {
         String[] a = st.split(",");
         int x = Integer.parseInt(a[0]);
