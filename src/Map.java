@@ -29,43 +29,43 @@ public class Map implements Map2D {
 	}
 	@Override
 	public void init(int w, int h, int v) {
-		/////// add your code below ///////
-
-		///////////////////////////////////
+        _map = new int[w][h];
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                _map[x][y] = v;
+            }
+        }
 	}
 	@Override
 	public void init(int[][] arr) {
-		/////// add your code below ///////
-
-		///////////////////////////////////
+		int w = arr.length;
+        int h = arr[0].length;
+        _map = new int[w][h];
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                _map[x][y] = arr[x][y];
+            }
+        }
 	}
 	@Override
 	public int[][] getMap() {
-		int[][] ans = null;
-		/////// add your code below ///////
-
-		///////////////////////////////////
-		return ans;
+		return _map;
 	}
 	@Override
-	/////// add your code below ///////
-	public int getWidth() {return 0;}
+	public int getWidth() {return _map.length;}
 	@Override
-	/////// add your code below ///////
-	public int getHeight() {return 0;}
+	public int getHeight() {return _map[0].length;}
 	@Override
-	/////// add your code below ///////
-	public int getPixel(int x, int y) { return 0;}
+	public int getPixel(int x, int y) { return _map[x][y];}
 	@Override
-	/////// add your code below ///////
 	public int getPixel(Pixel2D p) {
 		return this.getPixel(p.getX(),p.getY());
 	}
 	@Override
-	/////// add your code below ///////
-	public void setPixel(int x, int y, int v) {;}
+
+	public void setPixel(int x, int y, int v) {_map[x][y] = v;}
+
 	@Override
-	/////// add your code below ///////
 	public void setPixel(Pixel2D p, int v) {
 		;
 	}
@@ -95,26 +95,23 @@ public class Map implements Map2D {
 		return ans;
 	}
 	@Override
-	/////// add your code below ///////
 	public boolean isInside(Pixel2D p) {
-		return false;
+		int x = p.getX();
+        int y = p.getY();
+        return x>= 0 && x< getWidth() && y>= 0 && y < getHeight();
 	}
 
 	@Override
-	/////// add your code below ///////
 	public boolean isCyclic() {
-		return false;
+		return _cyclicFlag;
 	}
 	@Override
-	/////// add your code below ///////
-	public void setCyclic(boolean cy) {;}
+	public void setCyclic(boolean cy) {_cyclicFlag = cy;}
 	@Override
-	/////// add your code below ///////
+
 	public Map2D allDistance(Pixel2D start, int obsColor) {
 		Map2D ans = null;  // the result.
-		/////// add your code below ///////
 
-		///////////////////////////////////
 		return ans;
 	}
 }

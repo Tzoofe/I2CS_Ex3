@@ -5,12 +5,6 @@ import exe.ex3.game.PacmanGame;
 
 import java.awt.*;
 
-/**
- * This is the major algorithmic class for Ex3 - the PacMan game:
- *
- * This code is a very simple example (random-walk algorithm).
- * Your task is to implement (here) your PacMan algorithm.
- */
 public class Ex3Algo implements PacManAlgo{
 	private int _count;
 	public Ex3Algo() {_count=0;}
@@ -65,4 +59,12 @@ public class Ex3Algo implements PacManAlgo{
 		int ind = (int)(Math.random()*dirs.length);
 		return dirs[ind];
 	}
+
+
+    //get map matrice
+    public Map getMap(PacmanGame game) {
+        int[][] board = game.getGame(0);
+        Map map = new Map(board);
+        return map;
+    }
 }
