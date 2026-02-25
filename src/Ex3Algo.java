@@ -13,14 +13,22 @@ public class Ex3Algo implements PacManAlgo{
 	public String getInfo() {
 		return null;
 	}
-	@Override
+
 	/**
 	 * This ia the main method - that you should design, implement and test.
 	 */
-	public int move(PacmanGame game) {
+    //STATES
+    private static final int NORMAL = 0;
+    private static final int PANIC = 1;
+    private static final int HUNTING = 2;
+    private int _state = NORMAL;
+    private int _huntTimer = 0;
+
+
+    private int _startTimer = 50;
+@Override
+    public int move(PacmanGame game) {
         int code = 0;
-
-
         //gamestate
         int[][] board = game.getGame(code);
         String posStr = game.getPos(code);
@@ -33,55 +41,125 @@ public class Ex3Algo implements PacManAlgo{
         int blue = Game.getIntColor(Color.BLUE, code);
         int pink = Game.getIntColor(Color.PINK, code);
         int green = Game.getIntColor(Color.GREEN, code);
+        //ghosts
+        GhostCL[] ghosts = game.getGhosts(code);
 
         //create a map
         Map map = new Map(board);
         Map2D distances = map.allDistance(pacman, blue); //get distances from pacman to the next available block
 
-        //pink finding
-        Pixel2D target = findNearestColor(board, distances, pink);
-        System.out.println("Target: " + target);
-        if(target == null) {
-            target = findNearestColor(board, distances, green);
+        if (_startTimer > 0) {
+            _startTimer--;
+            //grace period chase food
+            Pixel2D target = findNearestColor(board, distances, pink);
+            if (target == null) target = findNearestColor(board, distances, green);
+            if (target == null) return randomDir();
+
+            Pixel2D[] path = map.shortestPath(pacman, target, blue);
+            if (path == null || path.length < 2) return randomDir();
+
+            return getDirection(pacman, path[1]);
         }
-        if(target == null) {
-            return randomDir();
+        //states
+        updateState(pacman, ghosts, code);
+
+        switch (_state){
+            case PANIC:
+                System.out.println("PANICA PANICA");
+                return runFromGhost(pacman, ghosts, code);
+            case HUNTING:
+                System.out.println("HUNTING");
+                return chaseGhost(pacman, ghosts, map, blue, code);
+            default:
+                //pink finding
+                Pixel2D target = findNearestColor(board, distances, pink);
+                System.out.println("Target: " + target);
+                if(target == null) {
+                    target = findNearestColor(board, distances, green);
+                }
+                if(target == null) {
+                    return randomDir();
+                }
+
+
+                //shortest path find
+                Pixel2D[] path = map.shortestPath(pacman, target, blue);
+                if(path == null || path.length < 2) {
+                    System.out.println("No path or too short!");
+                    return randomDir();
+
+                }
+
+                return getDirection(pacman, path[1]);
         }
-
-
-        //shortest path find
-        Pixel2D[] path = map.shortestPath(pacman, target, blue);
-        if(path == null || path.length < 2) {
-            System.out.println("No path or too short!");
-            return randomDir();
-
-        }
-
-        return getDirection(pacman, path[1]);
-
-
-
     }
-	private static void printBoard(int[][] b) {
-		for(int y =0;y<b[0].length;y++){
-			for(int x =0;x<b.length;x++){
-				int v = b[x][y];
-				System.out.print(v+"\t");
-			}
-			System.out.println();
-		}
-	}
-	private static void printGhosts(GhostCL[] gs) {
-		for(int i=0;i<gs.length;i++){
-			GhostCL g = gs[i];
-			System.out.println(i+") status: "+g.getStatus()+",  type: "+g.getType()+",  pos: "+g.getPos(0)+",  time: "+g.remainTimeAsEatable(0));
-		}
-	}
-	private static int randomDir() {
-		int[] dirs = {Game.UP, Game.LEFT, Game.DOWN, Game.RIGHT};
-		int ind = (int)(Math.random()*dirs.length);
-		return dirs[ind];
-	}
+
+    private void updateState(Pixel2D pacman, GhostCL[] ghosts, int code){
+        _state = NORMAL;
+
+        for(GhostCL ghost : ghosts) {
+            String ghostPosString = ghost.getPos(code); //string
+            String[] ghostPosRaw = ghostPosString.split(",");
+            int gx = Integer.parseInt(ghostPosRaw[0]);
+            int gy = Integer.parseInt(ghostPosRaw[1]);
+            Pixel2D ghostPos = new Index2D(gx, gy);
+            //distatnce calc
+            double dist = pacman.distance2D(ghostPos);
+
+            if(dist <= 4) {
+                if(ghost.remainTimeAsEatable(code) > 0) {
+                    _state = HUNTING;
+                }else {
+                    _state = PANIC;
+                    return;
+                }
+
+            }
+        }
+    }
+    private int runFromGhost(Pixel2D pacman, GhostCL[] ghosts, int code){
+        Pixel2D nearestGhost = null;
+        double minDist = Integer.MAX_VALUE;
+
+        for (int i = 0; i < ghosts.length; i++) {
+            String ghostPosString = ghosts[i].getPos(code); //string
+            String[] ghostPosRaw = ghostPosString.split(",");
+            int gx = Integer.parseInt(ghostPosRaw[0]);
+            int gy = Integer.parseInt(ghostPosRaw[1]);
+            Pixel2D ghostPos = new Index2D(gx, gy);
+
+            double dist = pacman.distance2D(ghostPos);
+            if(dist<minDist) {
+                minDist = dist;
+                nearestGhost = ghostPos;
+            }
+        }
+        if(nearestGhost == null) return randomDir();
+        return getDirection(nearestGhost, pacman);
+    }
+
+    private int chaseGhost(Pixel2D pacman, GhostCL[] ghosts, Map map, int code, int obsColor){
+        Pixel2D nearestGhost = null;
+        double minDist = Integer.MAX_VALUE;
+        for (int i = 0; i < ghosts.length; i++) {
+            if(ghosts[i].remainTimeAsEatable(code) <= 0) continue;
+            String ghostPosStr = ghosts[i].getPos(code);
+            String[] parts = ghostPosStr.split(",");
+            int gx = Integer.parseInt(parts[0]);
+            int gy = Integer.parseInt(parts[1]);
+            Pixel2D ghostPos = new Index2D(gx, gy);
+
+            double dist = pacman.distance2D(ghostPos);
+            if(dist<minDist) {
+                minDist = dist;
+                nearestGhost = ghostPos;
+            }
+        }
+        if(nearestGhost == null) return randomDir();
+        Pixel2D[] path = map.shortestPath(pacman, nearestGhost, obsColor);
+        if(path == null || path.length < 2) return randomDir();
+        return getDirection(pacman, path[1]);
+    }
 
     private Pixel2D findNearestColor(int[][] board, Map2D distances, int color) {
         Pixel2D nearest = null;
@@ -119,5 +197,29 @@ public class Ex3Algo implements PacManAlgo{
         //fallback
         return Game.UP;
 
+    }
+
+
+
+
+    private static void printBoard(int[][] b) {
+        for(int y =0;y<b[0].length;y++){
+            for(int x =0;x<b.length;x++){
+                int v = b[x][y];
+                System.out.print(v+"\t");
+            }
+            System.out.println();
+        }
+    }
+    private static void printGhosts(GhostCL[] gs) {
+        for(int i=0;i<gs.length;i++){
+            GhostCL g = gs[i];
+            System.out.println(i+") status: "+g.getStatus()+",  type: "+g.getType()+",  pos: "+g.getPos(0)+",  time: "+g.remainTimeAsEatable(0));
+        }
+    }
+    private static int randomDir() {
+        int[] dirs = {Game.UP, Game.LEFT, Game.DOWN, Game.RIGHT};
+        int ind = (int)(Math.random()*dirs.length);
+        return dirs[ind];
     }
 }

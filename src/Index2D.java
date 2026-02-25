@@ -12,11 +12,10 @@ public class Index2D implements Pixel2D {
         return _y;
     }
     public double distance2D(Pixel2D t) {
-        double ans = 0;
-        /////// add your code below ///////
+        int dx = this._x - t.getX();
+        int dy = this._y - t.getY();
+        return Math.sqrt(dx*dx + dy*dy);
 
-        ///////////////////////////////////
-        return ans;
     }
     @Override
     public String toString() {
