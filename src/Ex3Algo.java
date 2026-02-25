@@ -21,8 +21,8 @@ public class Ex3Algo implements PacManAlgo{
 	 */
 	public int move(PacmanGame game) {
 		if(_count==0 || _count==300) {
-			int code = 0;
-			int[][] board = game.getGame(0);
+			int code = 4;
+			int[][] board = game.getGame(code);
 			printBoard(board);
 			int blue = Game.getIntColor(Color.BLUE, code);
 			int pink = Game.getIntColor(Color.PINK, code);

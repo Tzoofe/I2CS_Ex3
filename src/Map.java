@@ -67,7 +67,7 @@ public class Map implements Map2D {
 
 	@Override
 	public void setPixel(Pixel2D p, int v) {
-		;
+		_map[p.getX()][p.getY()] = v;
 	}
 	@Override
 	/** 
@@ -88,17 +88,62 @@ public class Map implements Map2D {
 	 * https://en.wikipedia.org/wiki/Breadth-first_search
 	 */
 	public Pixel2D[] shortestPath(Pixel2D p1, Pixel2D p2, int obsColor) {
-		Pixel2D[] ans = null;  // the result.
-		/////// add your code below ///////
+        int width = getWidth();
+        int height = getHeight();
+        //parent
+        Pixel2D[][] parent = new Pixel2D[width][height];
+        boolean[][] visited = new boolean[width][height];
+        //bfs queue
+        java.util.Queue<Pixel2D> queue = new java.util.LinkedList<>();
+        queue.add(p1);
+        visited[p1.getX()][p1.getY()] = true;
 
-		///////////////////////////////////
-		return ans;
-	}
+        while(!queue.isEmpty()) {
+            Pixel2D currentP = queue.poll();
+            //found target stop
+            if(currentP.getX() == p2.getX() && currentP.getY() == p2.getY()) {
+                break;
+            }
+            //check surrounding
+            int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+            for (int[] d : directions) {
+                int nx = currentP.getX() + d[0];
+                int ny = currentP.getY() + d[1];
+                Pixel2D neighbor = new Index2D(nx, ny);
+
+                //skip if out of bounds
+                if(!isInside(neighbor)) continue;
+                //skip if is obs
+                if(getPixel(neighbor) == obsColor) continue;
+                //skip if visited
+                if(visited[nx][ny]) continue;
+                //mark point as visited and set parent
+                visited[nx][ny] = true;
+                parent[nx][ny] = currentP;
+                queue.add(neighbor);
+
+            }
+        }
+        //we check if we actaully reach the point
+        if(!visited[p2.getX()][p2.getY()]){
+            return null; //no path;
+        }
+        java.util.ArrayList<Pixel2D> path = new java.util.ArrayList<>();
+        Pixel2D currentP = p2;
+        while(currentP != null) {
+            path.add(currentP);
+            currentP = parent[currentP.getX()][currentP.getY()];
+        }
+        java.util.Collections.reverse(path);
+        return path.toArray(new Pixel2D[0]);
+    }
 	@Override
 	public boolean isInside(Pixel2D p) {
 		int x = p.getX();
         int y = p.getY();
         return x>= 0 && x< getWidth() && y>= 0 && y < getHeight();
+
+
 	}
 
 	@Override
@@ -110,8 +155,34 @@ public class Map implements Map2D {
 	@Override
 
 	public Map2D allDistance(Pixel2D start, int obsColor) {
-		Map2D ans = null;  // the result.
+        Map2D result = new Map(getWidth(), getHeight(), -1);
+        result.setPixel(start, 0);
 
-		return ans;
+        //bfs queue
+        java.util.Queue<Pixel2D> queue = new java.util.LinkedList<>();
+        queue.add(start);
+        //bfs loop
+        while(!queue.isEmpty()) {
+            Pixel2D current = queue.poll();
+            int currentDist = result.getPixel(current);
+
+            int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+            for (int[] d : dirs) {
+                int nx = current.getX() + d[0];
+                int ny = current.getY() + d[1];
+                Pixel2D neighbor = new Index2D(nx, ny);
+
+                //skip if in bounds
+                if(!isInside(neighbor)) continue;
+                //skip if obstacle
+                if(getPixel(neighbor) == obsColor) continue;
+                //skip if already visited
+                if(result.getPixel(neighbor) != -1) continue;
+                //set the distance and add to queue
+                result.setPixel(neighbor, currentDist + 1);
+                queue.add(neighbor);
+            }
+        }
+        return result;
 	}
 }
