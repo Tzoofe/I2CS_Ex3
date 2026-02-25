@@ -109,8 +109,13 @@ public class Map implements Map2D {
             for (int[] d : directions) {
                 int nx = currentP.getX() + d[0];
                 int ny = currentP.getY() + d[1];
+                if(_cyclicFlag){
+                    nx = (nx + getWidth()) % getWidth();
+                    ny = (ny + getHeight()) % getHeight();
+                }else {
+                    if (nx < 0 || nx >= getWidth() || ny < 0 || ny >= getHeight()) continue;
+                }
                 Pixel2D neighbor = new Index2D(nx, ny);
-
                 //skip if out of bounds
                 if(!isInside(neighbor)) continue;
                 //skip if is obs
@@ -170,8 +175,13 @@ public class Map implements Map2D {
             for (int[] d : dirs) {
                 int nx = current.getX() + d[0];
                 int ny = current.getY() + d[1];
+                if(_cyclicFlag){
+                    nx = (nx + getWidth()) % getWidth();
+                    ny = (ny + getHeight()) % getHeight();
+                }else {
+                    if (nx < 0 || nx >= getWidth() || ny < 0 || ny >= getHeight()) continue;
+                }
                 Pixel2D neighbor = new Index2D(nx, ny);
-
                 //skip if in bounds
                 if(!isInside(neighbor)) continue;
                 //skip if obstacle
