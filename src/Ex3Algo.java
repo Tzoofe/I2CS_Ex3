@@ -11,7 +11,7 @@ public class Ex3Algo implements PacManAlgo{
 	 *  Add a short description for the algorithm as a String.
 	 */
 	public String getInfo() {
-		return null;
+        return "State-based Pacman AI: collects pink dots (then green), runs from dangerous ghosts, hunts eatable ghosts.";
 	}
 
 	/**
@@ -44,6 +44,8 @@ public class Ex3Algo implements PacManAlgo{
         int green = Game.getIntColor(Color.GREEN, code);
         //ghosts
         GhostCL[] ghosts = game.getGhosts(code);
+        printGhosts(ghosts);
+
 
         //create a map
         Map map = new Map(board);
@@ -110,7 +112,7 @@ public class Ex3Algo implements PacManAlgo{
             //distance calc
             double dist = pacman.distance2D(ghostPos);
 
-            if(dist <= 4) {
+            if(dist <= 2) {
                 if(ghost.remainTimeAsEatable(code) > 0) {
                     _state = HUNTING;
                 }else {

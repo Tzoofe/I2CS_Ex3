@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * This class represents a 2D map as a "screen" or a raster matrix or maze over integers.
  * @author boaz.benmoshe
@@ -75,11 +78,45 @@ public class Map implements Map2D {
 	 * https://en.wikipedia.org/wiki/Flood_fill
 	 */
 	public int fill(Pixel2D xy, int new_v) {
-		int ans=0;
-		/////// add your code below ///////
+//check if inside
+        if(!isInside(xy)) return 0;
+        //check old color
+        int old_v = getPixel(xy);
+        //dont color same color twice
+        if(old_v == new_v) return 0;
+        //BFS
+        Queue<Pixel2D> q = new LinkedList<>();
+        q.add(xy);
 
-		///////////////////////////////////
-		return ans;
+        //paint the pixel
+        setPixel(xy, new_v);
+        //record pixel painted
+        int count = 1;
+
+        //waveloop
+        while(!q.isEmpty()) {
+            Pixel2D current = q.poll();
+            //check directions (up down right left - in that order)
+            int[] dx = {0, 0, 1, -1};
+            int[] dy = {1, -1, 0, 0};
+            //start checking around
+            for (int i = 0; i < 4; i++) { //4 for 4 directions
+                int nx = current.getX() + dx[i];
+                int ny = current.getY() + dy[i];
+                if(_cyclicFlag) { //pacman or hit a wall
+                    nx = (nx + getWidth()) % getWidth();
+                    ny = (ny + getHeight()) % getHeight();
+                }
+                Pixel2D neighbor = new Index2D(nx, ny);
+                if(isInside(neighbor) && getPixel(neighbor) == old_v) {
+                    setPixel(neighbor, new_v);
+                    q.add(neighbor);
+                    count++;
+                }
+            }
+        }
+
+        return count;
 	}
 
 	@Override
