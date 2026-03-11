@@ -22,7 +22,9 @@ public class Map implements Map2D {
 	 * @param size
 	 */
 	public Map(int size) {this(size,size, 0);}
-	
+	public Map() {
+        this(1, 1, 0);
+    }
 	/**
 	 * Constructs a map from a given 2D array.
 	 * @param data
