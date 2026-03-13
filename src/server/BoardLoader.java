@@ -33,25 +33,29 @@ public class BoardLoader {
         board[10][2] = MAGENTA; board[11][2] = MAGENTA; board[12][2] = MAGENTA;
 
         //inside walls
-        board[2][4] = MAGENTA; board[3][4] = MAGENTA; board[4][4] = MAGENTA;
-        board[6][4] = MAGENTA; board[7][4] = MAGENTA; board[8][4] = MAGENTA;
-        board[10][4] = MAGENTA; board[11][4] = MAGENTA; board[12][4] = MAGENTA;
+        board[2][4] = MAGENTA; board[3][4] = MAGENTA;
+        board[6][4] = MAGENTA; board[7][4] = BLACK; board[8][4] = MAGENTA;
+        board[11][4] = MAGENTA; board[12][4] = MAGENTA;
 
         //inside walls
-        board[4][5] = MAGENTA;
-        board[10][5] = MAGENTA;
+        board[11][5] = MAGENTA; board[11][6] = MAGENTA;
+        board[3][5] = MAGENTA; board[3][6] = MAGENTA;
 
         //inside walls
-        board[0][6] = MAGENTA; board[1][6] = MAGENTA; board[2][6] = MAGENTA;
-        board[4][6] = MAGENTA;
-        board[6][6] = MAGENTA; board[7][6] = MAGENTA; board[8][6] = MAGENTA;
-        board[10][6] = MAGENTA;
-        board[12][6] = MAGENTA; board[13][6] = MAGENTA; board[14][6] = MAGENTA;
+        board[0][6] = MAGENTA; board[1][6] = MAGENTA;
+        board[6][6] = MAGENTA; board[8][6] = MAGENTA;
+        board[13][6] = MAGENTA; board[14][6] = MAGENTA;
 
         //center cage
-        board[6][9] = MAGENTA;
-        board[8][9] = MAGENTA;
-        board[7][7] = BLACK;  // center empty
+        board[8][5] = BLACK;
+        board[6][5] = BLACK;
+        board[5][5] = MAGENTA;
+
+        board[9][5] = MAGENTA;
+        board[7][3] = MAGENTA;
+        board[7][6] = BLACK;  // center empty
+        board[7][5] = BLACK;  // center empty
+
 
         //inside walls
         board[0][8] = MAGENTA; board[1][8] = MAGENTA; board[2][8] = MAGENTA;
@@ -91,7 +95,7 @@ public class BoardLoader {
         MyGhost[] ghosts = new MyGhost[count];
 
         for (int i = 0; i < count; i++) {
-            ghosts[i] = new MyGhost(6 + i, 5, i);
+            ghosts[i] = new MyGhost(6 + i, 5, i, true);
 
         }
         return ghosts;

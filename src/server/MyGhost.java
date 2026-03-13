@@ -7,20 +7,23 @@ public class MyGhost implements GhostCL {
     private int _status;
     private int _type;
     private int _eatableTime;
+    private boolean _isAlive;
 
     public String getInfo(){
         return ("Ghost type: " + _type + " at (" + _x + "," + _y + ")");
     }
 
-    public MyGhost(int x, int y, int type) {
+    public MyGhost(int x, int y, int type, boolean alive) {
         _x = x;
         _y = y;
         _type = type;
         _status = 1;
         _eatableTime = 0;
+        _isAlive = true;
     }
     @Override
     public int getStatus() { return _status;}
+    public Boolean isAlive() { return _isAlive;}
     @Override
     public int getType() { return _type;}
     @Override
@@ -38,6 +41,7 @@ public class MyGhost implements GhostCL {
             _eatableTime--;
         }
     }
+    public void setAlive(boolean s) {_isAlive = s;}
     public int getX(){return _x;}
     public int getY(){return _y;}
 }

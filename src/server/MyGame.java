@@ -119,8 +119,11 @@ public class MyGame implements PacmanGame {
 
         //ghsts
         for (MyGhost g : _ghosts) {
-            String img = "imgs/g" + g.getType() + ".png";
-            StdDraw.picture(g.getX() + 0.5, g.getY() + 0.5, img, 0.7, 0.9);
+            if(g.isAlive()) {
+                String img = "imgs/g" + g.getType() + ".png";
+                StdDraw.picture(g.getX() + 0.5, g.getY() + 0.5, img, 0.7, 0.9);
+            }
+
         }
 
         StdDraw.show();
@@ -159,15 +162,93 @@ public class MyGame implements PacmanGame {
         } else if (_board[newX][newY] == CYAN) {
             _score += 10;
             _board[newX][newY] = BLACK;
+            //make gshots eatable
+            for (int j = 0; j < _ghosts.length; j++) {
+                _ghosts[j].setEatableTime(50);
+                
+            }
         }
         //update pos
         _pacX = newX;
         _pacY = newY;
 
         draw();
+        checkCollision();
         return (_pacX + "," + _pacY);
+
+
+    }
+    public void tickGhosts() {
+        for (int i = 0; i < _ghosts.length; i++) {
+            _ghosts[i].tick();
+        }
     }
 
+
+
+    //ghosts movement
+    public void moveGhost() {
+        for (int i = 0; i < _ghosts.length; i++) {
+            MyGhost ghost = _ghosts[i];
+            if(ghost.isAlive()){
+                //curretn pos of ghost
+                int gx = ghost.getX();
+                int gy = ghost.getY();
+
+                //dirs
+                int[] dirs = {UP, DOWN, LEFT, RIGHT};
+
+                //random directoins
+                int ranDir = dirs[(int)(Math.random() * 4)];
+                int newX = gx;
+                int newY = gy;
+
+                if (ranDir == UP) newY++;
+                else if (ranDir == DOWN) newY--;
+                else if (ranDir == LEFT) newX--;
+                else if (ranDir == RIGHT) newX++;
+
+                //cyclic
+                if(_cyclic) {
+                    newX = (newX + _width) % _width;
+                    newY = (newY + _height) % _height;
+                }
+                //bounds if !cyclic
+                else {
+                    if (newX < 0 || newX >= _width || newY < 0 || newY >= _height) {
+                        continue;
+                    }
+                }
+                //wall
+                if(_board[newX][newY] != MAGENTA) {
+                    ghost.setPos(newX, newY);
+                }
+            }
+
+        }
+        checkCollision();
+
+    }
+    //ghost collision
+    private void checkCollision() {
+        //if the pacmans position and ghost posistion are the same make the status done
+        for (int i = 0; i < _ghosts.length; i++) {
+            MyGhost ghost = _ghosts[i];
+            if(ghost.isAlive()){
+                if(_pacX == ghost.getX() && _pacY == ghost.getY()) {
+                    //pacman eat ghost
+                    if(ghost.remainTimeAsEatable(0) > 0 ) {
+                        _score += 100;
+                        ghost.setAlive(false);
+                    }else {
+                        _status = DONE;
+                        System.out.println("GAME OVER - COLLISION");
+                    }
+
+                }
+            }
+        }
+    }
 
 
 

@@ -7,6 +7,9 @@ public class Ex3Main_Server {
 
         game.play();
 
+        int timer = 50;
+
+
         //loop
         while(game.getStatus() != MyGame.DONE){
             Character key = game.getKeyChar();
@@ -21,7 +24,15 @@ public class Ex3Main_Server {
                     game.move(dir);
                 }
             }
-                try {
+            game.tickGhosts();
+            if(timer > 0) {
+                timer--;
+            }else {
+                game.moveGhost();
+            }
+
+            game.draw();
+            try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
