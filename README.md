@@ -1,5 +1,5 @@
 # Ex3 - Pac-Man Server Implementation
-![Alt text for the image](imgs/Screenshot 2026-03-15 014255.png)
+<img src="imgs/Screenshot 2026-03-15 014255.png">
 ## How to Run
 
 ### Ex3Server (Full Game - Custom Server)
