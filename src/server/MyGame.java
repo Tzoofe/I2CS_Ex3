@@ -2,7 +2,12 @@ package server;
 import exe.ex3.game.GhostCL;
 import exe.ex3.game.PacmanGame;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class MyGame implements PacmanGame {
+
     //states
     public static final int DONE = -1;
     public static final int PAUSED = 0;
@@ -23,6 +28,7 @@ public class MyGame implements PacmanGame {
     //states
     private int _score;
     private int _status;
+    private int _coinsLeft;
 
     //settings
     private boolean _cyclic;
@@ -63,6 +69,9 @@ public class MyGame implements PacmanGame {
     public int[][] getGame(int i) {
         return _board;
     }
+    public int coinsLeft(int i) {
+        return _coinsLeft;
+    }
 
     @Override
     public void play() {
@@ -87,6 +96,9 @@ public class MyGame implements PacmanGame {
     public int getStatus() {
         return _status;
     }
+    public int getCoinsLeft() {
+        return _coinsLeft;
+    }
 
     @Override
     public boolean isCyclic() {
@@ -106,10 +118,12 @@ public class MyGame implements PacmanGame {
                     StdDraw.picture(centerX, centerY, "imgs/wall.png", 1, 1);
                 }
                 else if (_board[x][y] == CYAN) {
+
                     StdDraw.picture(centerX, centerY, "imgs/powerup.jpeg", 0.5, 0.5);
                 }
                 else if (_board[x][y] == PINK) {
                     StdDraw.picture(centerX, centerY, "imgs/coin.jpg", 0.5, 0.5);
+
                 }
 
             }
@@ -132,6 +146,7 @@ public class MyGame implements PacmanGame {
     @Override
     //move
     public String move(int i){
+
         int newX = _pacX;
         int newY = _pacY;
 
@@ -158,15 +173,26 @@ public class MyGame implements PacmanGame {
         //coins
         if(_board[newX][newY] == PINK) {
             _score +=1;
+            _coinsLeft--;
             _board[newX][newY] = BLACK;
         } else if (_board[newX][newY] == CYAN) {
             _score += 10;
+            _coinsLeft--;
             _board[newX][newY] = BLACK;
             //make gshots eatable
             for (int j = 0; j < _ghosts.length; j++) {
                 _ghosts[j].setEatableTime(50);
                 
             }
+        }
+        if(_coinsLeft == 0) {
+            try {
+                String win = Files.readString(Path.of("ascii/winning.txt"));
+                System.out.println(win);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            _status = DONE;
         }
         //update pos
         _pacX = newX;
@@ -261,6 +287,14 @@ public class MyGame implements PacmanGame {
         _ghosts = BoardLoader.createGhosts(level);
         _width = _board.length;
         _height = _board[0].length;
+        _coinsLeft = 0;
+        for (int posx = 0; posx < _width; posx++) {
+            for (int posy = 0; posy < _height; posy++) {
+                if(_board[posx][posy] == PINK ||_board[posx][posy] == CYAN) {
+                    _coinsLeft++;
+                }
+            }
+        }
         _pacX = _width / 2;
         _pacY = _height / 2;
         _cyclic = cyclic;

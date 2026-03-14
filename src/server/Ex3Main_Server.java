@@ -1,8 +1,14 @@
 package server;
+import javax.swing.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Ex3Main_Server {
-    public static void main(String[] arg) {
+    public static void main(String[] arg) throws IOException {
+        String ascii = Files.readString(Path.of("ascii/ascii.txt"));
         MyGame game =new MyGame();
+        System.out.println(ascii);
         game.init(3, "p1", true, 0,1.0, 100, 0);
 
         game.play();
