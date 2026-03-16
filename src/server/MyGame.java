@@ -134,8 +134,14 @@ public class MyGame implements PacmanGame {
         //ghsts
         for (MyGhost g : _ghosts) {
             if(g.isAlive()) {
-                String img = "imgs/g" + g.getType() + ".png";
-                StdDraw.picture(g.getX() + 0.5, g.getY() + 0.5, img, 0.7, 0.9);
+                if(g.remainTimeAsEatable(0)> 0){
+                    String img = "imgs/g" + g.getType() + ".png";
+                    StdDraw.picture(g.getX() + 0.5, g.getY() + 0.5, img, 0.3, 0.5);
+                }else{
+                    String img = "imgs/g" + g.getType() + ".png";
+                    StdDraw.picture(g.getX() + 0.5, g.getY() + 0.5, img, 0.7, 0.9);
+                }
+
             }
 
         }

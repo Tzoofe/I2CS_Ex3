@@ -11,7 +11,6 @@ public class Ex3Main_Server {
         System.out.println(ascii);
         game.init(3, "p1", true, 0,1.0, 100, 0);
 
-        game.play();
 
         int timer = 50;
 
@@ -20,6 +19,9 @@ public class Ex3Main_Server {
         while(game.getStatus() != MyGame.DONE){
             Character key = game.getKeyChar();
             if(key != null) {
+                if(game.getStatus() == MyGame.PAUSED){
+                    game.play();
+                }
                 int dir = -1;
                 if (key == 'w' || key == 'W') dir = MyGame.UP;
                 else if (key == 's' || key == 'S') dir = MyGame.DOWN;
@@ -30,12 +32,15 @@ public class Ex3Main_Server {
                     game.move(dir);
                 }
             }
-            game.tickGhosts();
-            if(timer > 0) {
-                timer--;
-            }else {
-                game.moveGhost();
+            if(game.getStatus() == MyGame.RUNNING){
+                game.tickGhosts();
+                if(timer > 0) {
+                    timer--;
+                }else {
+                    game.moveGhost();
+                }
             }
+
 
             game.draw();
             try {
