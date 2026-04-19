@@ -7,10 +7,10 @@ import java.nio.file.Path;
 public class Ex3Main_Server {
     public static void main(String[] arg) throws IOException {
         String ascii = Files.readString(Path.of("ascii/ascii.txt"));
-        MyGame game =new MyGame();
+        MyGame game = new MyGame();
         System.out.println(ascii);
         game.init(3, "p1", true, 0,1.0, 100, 0);
-
+        Ex3Algo algo = new Ex3Algo();
 
         int timer = 50;
 
@@ -19,20 +19,23 @@ public class Ex3Main_Server {
         while(game.getStatus() != MyGame.DONE){
             Character key = game.getKeyChar();
             if(key != null) {
-                if(game.getStatus() == MyGame.PAUSED){
+                if (game.getStatus() == MyGame.PAUSED) {
                     game.play();
                 }
-                int dir = -1;
-                if (key == 'w' || key == 'W') dir = MyGame.UP;
-                else if (key == 's' || key == 'S') dir = MyGame.DOWN;
-                else if (key == 'd' || key == 'D') dir = MyGame.RIGHT;
-                else if (key == 'a' || key == 'A') dir = MyGame.LEFT;
-
-                if (dir != -1) {
-                    game.move(dir);
-                }
             }
+//                int dir = -1;
+//                if (key == 'w' || key == 'W') dir = MyGame.UP;
+//                else if (key == 's' || key == 'S') dir = MyGame.DOWN;
+//                else if (key == 'd' || key == 'D') dir = MyGame.RIGHT;
+//                else if (key == 'a' || key == 'A') dir = MyGame.LEFT;
+//
+//                if (dir != -1) {
+//                    game.move(dir);
+//                }
+
             if(game.getStatus() == MyGame.RUNNING){
+                int dir = algo.move(game);
+                game.move(dir);
                 game.tickGhosts();
                 if(timer > 0) {
                     timer--;
