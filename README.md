@@ -1,7 +1,7 @@
 # Ex3 - Pac-Man Server Implementation
 <img src="imgs/Screenshot 2026-03-15 014255.png">
 
-#2168 lines of code and counting!!
+### 2168 lines of code and counting!!
 
 
 ## How to Run
