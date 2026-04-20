@@ -168,8 +168,8 @@ public class Ex3Algo implements PacManAlgo{
 
     private int[] getNextPosition(Pixel2D pos, int dir, int width, int height) {
         int dx = 0, dy = 0;
-        if(dir == Game.UP) dy = -1;
-        else if(dir == Game.DOWN) dy = 1;
+        if(dir == Game.UP) dy = 1;
+        else if(dir == Game.DOWN) dy = -1;
         else if(dir == Game.LEFT) dx = -1;
         else if(dir == Game.RIGHT) dx = 1;
 
@@ -178,7 +178,7 @@ public class Ex3Algo implements PacManAlgo{
         return new int[]{nx, ny};
     }
 
-    private int chaseGhost(Pixel2D pacman, GhostCL[] ghosts, Map map, int code, int obsColor){
+    private int chaseGhost(Pixel2D pacman, GhostCL[] ghosts, Map map, int obsColor, int code){
         Pixel2D nearestGhost = null;
         double minDist = Integer.MAX_VALUE;
         for (int i = 0; i < ghosts.length; i++) {
