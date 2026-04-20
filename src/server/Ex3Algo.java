@@ -152,8 +152,27 @@ public class Ex3Algo implements PacManAlgo {
         int height = board[0].length;
 
         //check if escape direction is blocked
+        //boardarray
+        int[][] cageCord = {
+                {6, 5},
+                {8, 5},
+                {7, 6},
+                {7, 5},
+                {6, 4},
+                {7, 4},
+                {8, 4}
+        };
+
         int[] nextPos = getNextPosition(pacman, escapeDir, width, height);
-        if (board[nextPos[0]][nextPos[1]] != obsColor) {
+        Boolean allowedPath = true;
+        for (int i = 0; i < cageCord.length; i++) {
+            if(cageCord[i][0] == nextPos[0] && cageCord[i][1] == nextPos[1]){
+                allowedPath = false;
+                break;
+            }
+
+        }
+        if (board[nextPos[0]][nextPos[1]] != obsColor && allowedPath) {
             return escapeDir;
         }
 
@@ -161,7 +180,14 @@ public class Ex3Algo implements PacManAlgo {
         int[] tryOrder = {MyGame.UP, MyGame.LEFT, MyGame.DOWN, MyGame.RIGHT};
         for (int dir : tryOrder) {
             int[] testPos = getNextPosition(pacman, dir, width, height);
-            if (board[testPos[0]][testPos[1]] != obsColor) {
+            boolean inCage = false;
+            for (int i = 0; i < cageCord.length; i++) {
+                if (cageCord[i][0] == testPos[0] && cageCord[i][1] == testPos[1]) {
+                    inCage = true;
+                    break;
+                }
+            }
+            if (board[testPos[0]][testPos[1]] != obsColor && !inCage) {
                 return dir;
             }
         }
@@ -171,8 +197,8 @@ public class Ex3Algo implements PacManAlgo {
 
     private int[] getNextPosition(Pixel2D pos, int dir, int width, int height) {
         int dx = 0, dy = 0;
-        if (dir == MyGame.UP) dy = -1;
-        else if (dir == MyGame.DOWN) dy = 1;
+        if (dir == MyGame.UP) dy = 1;
+        else if (dir == MyGame.DOWN) dy = -1;
         else if (dir == MyGame.LEFT) dx = -1;
         else if (dir == MyGame.RIGHT) dx = 1;
 
@@ -181,7 +207,7 @@ public class Ex3Algo implements PacManAlgo {
         return new int[]{nx, ny};
     }
 
-    private int chaseGhost(Pixel2D pacman, GhostCL[] ghosts, Map map, int code, int obsColor) {
+    private int chaseGhost(Pixel2D pacman, GhostCL[] ghosts, Map map, int obsColor, int code) {
         Pixel2D nearestGhost = null;
         double minDist = Integer.MAX_VALUE;
         for (int i = 0; i < ghosts.length; i++) {

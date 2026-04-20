@@ -30,11 +30,11 @@ public class BoardLoader {
 
         //row 2
         board[2][2] = MAGENTA; board[3][2] = MAGENTA;
-        board[10][2] = BLACK; board[11][2] = MAGENTA; board[12][2] = MAGENTA;
+        board[11][2] = MAGENTA; board[12][2] = MAGENTA;
 
         //inside walls
         board[2][4] = MAGENTA; board[3][4] = MAGENTA;
-        board[6][4] = BLACK; board[7][4] = BLACK; board[8][4] = BLACK;
+
         board[11][4] = MAGENTA; board[12][4] = MAGENTA;
 
         //inside walls
@@ -46,9 +46,20 @@ public class BoardLoader {
         board[6][6] = MAGENTA; board[8][6] = MAGENTA;
         board[13][6] = MAGENTA; board[14][6] = MAGENTA;
 
-        //center cage
-        board[8][5] = BLACK;
+
+        //CENTER CAGE
         board[6][5] = BLACK;
+        board[8][5] = BLACK;
+        board[7][6] = BLACK;
+        board[7][5] = BLACK;
+        board[6][4] = BLACK;
+        board[7][4] = BLACK;
+        board[8][4] = BLACK;
+
+
+
+        board[9][6] = MAGENTA;
+        board[5][6] = MAGENTA;
         board[5][5] = MAGENTA;
         board[5][4] = MAGENTA;
         board[5][3] = MAGENTA;
@@ -56,12 +67,8 @@ public class BoardLoader {
         board[8][3] = MAGENTA;
         board[9][3] = MAGENTA;
         board[9][4] = MAGENTA;
-
-
         board[9][5] = MAGENTA;
         board[7][3] = MAGENTA;
-        board[7][6] = BLACK;  // center empty
-        board[7][5] = BLACK;  // center empty
 
 
         //inside walls
