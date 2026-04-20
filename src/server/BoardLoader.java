@@ -1,6 +1,8 @@
 package server;
 
 
+import exe.ex3.game.GhostCL;
+
 public class BoardLoader {
     private static final int BLACK = StdDraw.BLACK.getRGB();
     private static final int MAGENTA = StdDraw.MAGENTA.getRGB();
@@ -27,14 +29,12 @@ public class BoardLoader {
         }
 
         //row 2
-        board[2][2] = MAGENTA; board[3][2] = MAGENTA; board[4][2] = MAGENTA;
-        board[6][2] = MAGENTA;
-        board[8][2] = MAGENTA;
-        board[10][2] = MAGENTA; board[11][2] = MAGENTA; board[12][2] = MAGENTA;
+        board[2][2] = MAGENTA; board[3][2] = MAGENTA;
+        board[10][2] = BLACK; board[11][2] = MAGENTA; board[12][2] = MAGENTA;
 
         //inside walls
         board[2][4] = MAGENTA; board[3][4] = MAGENTA;
-        board[6][4] = MAGENTA; board[7][4] = BLACK; board[8][4] = MAGENTA;
+        board[6][4] = BLACK; board[7][4] = BLACK; board[8][4] = BLACK;
         board[11][4] = MAGENTA; board[12][4] = MAGENTA;
 
         //inside walls
@@ -50,6 +50,13 @@ public class BoardLoader {
         board[8][5] = BLACK;
         board[6][5] = BLACK;
         board[5][5] = MAGENTA;
+        board[5][4] = MAGENTA;
+        board[5][3] = MAGENTA;
+        board[6][3] = MAGENTA;
+        board[8][3] = MAGENTA;
+        board[9][3] = MAGENTA;
+        board[9][4] = MAGENTA;
+
 
         board[9][5] = MAGENTA;
         board[7][3] = MAGENTA;
@@ -63,6 +70,9 @@ public class BoardLoader {
         board[6][8] = MAGENTA; board[7][8] = MAGENTA; board[8][8] = MAGENTA;
         board[10][8] = MAGENTA;
         board[12][8] = MAGENTA; board[13][8] = MAGENTA; board[14][8] = MAGENTA;
+        board[5][1] = MAGENTA;
+        board[7][1] = MAGENTA;
+        board[9][1] = MAGENTA;
 
         //inside walls
         board[4][9] = MAGENTA;
@@ -90,14 +100,21 @@ public class BoardLoader {
 
         return board;
     }
-    public static MyGhost[] createGhosts(int level){
+    public static MyGhost[] createGhosts(int level) {
         int count = Math.min(level + 1, 4);
         MyGhost[] ghosts = new MyGhost[count];
 
-        for (int i = 0; i < count; i++) {
-            ghosts[i] = new MyGhost(6 + i, 5, i, true);
+        int[][] spawnPoints = {
+                {7, 4},
+                {6, 5},
+                {8, 5},
+                {7, 5}
+        };
 
+        for (int i = 0; i < count; i++) {
+            ghosts[i] = new MyGhost(spawnPoints[i][0], spawnPoints[i][1], i, true);
         }
+
         return ghosts;
     }
 }
